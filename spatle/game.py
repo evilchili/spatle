@@ -1,9 +1,12 @@
+from pathlib import Path
 import random
 
-word_list = [
-    "fnord",
-    "crane",
-]
+
+def word_list(text_file: Path = None) -> list:
+    if not text_file:
+        text_file = Path(__file__).parent / Path('sources') / Path('default.txt')
+    with open(text_file) as fh:
+        return [w.strip() for w in fh.readlines()]
 
 
 class Word(str):
@@ -29,8 +32,8 @@ class Word(str):
         return results
 
     @classmethod
-    def random_from_list(cls):
-        return cls(random.choice(word_list))
+    def random_from_list(cls, text_file: Path = None):
+        return cls(random.choice(word_list(text_file=text_file)))
 
 
 class Game:

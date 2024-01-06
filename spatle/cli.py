@@ -19,7 +19,7 @@ def main(context: typer.Context):
         handlers=[RichHandler(rich_tracebacks=True, tracebacks_suppress=[typer])],
     )
     logging.getLogger("asyncio").setLevel(logging.ERROR)
-    print("SPATLE: Speech PAthology wordLE!")
+    print("SPATLE: Speech PAThology wordLE!\n")
     if not context.invoked_subcommand:
         return play(context)
 
@@ -27,10 +27,8 @@ def main(context: typer.Context):
 @app.command()
 def play(context: typer.Context):
     game = Game()
-    print("")
     while game.guesses_remaining:
-        solved = game.guess(typer.prompt(f"{game}\nEnter your guess: "))
-        if solved:
+        if game.guess(typer.prompt(f"\n{game}\nEnter your five-letter guess (CTRL+C to quit)")):
             print(f"Correct! The solution was: {game.solution}")
             return
     print(f"You are out of guesses! The solution was: {game.solution}")
