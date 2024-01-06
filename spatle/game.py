@@ -37,8 +37,8 @@ class Word(str):
 
 
 class Game:
-    def __init__(self, solution: str = None, guess_limit: int = 5):
-        self.solution = Word(solution) if solution else Word.random_from_list()
+    def __init__(self, solution: str = None, guess_limit: int = 5, wordlist: Path = None):
+        self.solution = Word(solution) if solution else Word.random_from_list(text_file=wordlist)
         self._guesses = 0
         self._guess_limit = guess_limit
         self._state = [""] * len(self.solution)

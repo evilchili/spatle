@@ -1,5 +1,6 @@
 import logging
 import os
+from pathlib import Path
 
 import typer
 from rich.logging import RichHandler
@@ -9,9 +10,17 @@ from spatle.game import Game
 
 app = typer.Typer()
 
+app_state = dict()
+
 
 @app.callback()
-def main(context: typer.Context):
+def main(
+    context: typer.Context,
+    words: Path = typer.Option(
+        None,
+        help="Path to a text file containing words, one per line. If not specified, built-in samples will be used.",
+    )
+):
     debug = os.getenv("SPATLE_DEBUG", None)
     logging.basicConfig(
         format="%(message)s",
@@ -20,13 +29,17 @@ def main(context: typer.Context):
     )
     logging.getLogger("asyncio").setLevel(logging.ERROR)
     print("SPATLE: Speech PAThology wordLE!\n")
+    app_state['words'] = words
     if not context.invoked_subcommand:
         return play(context)
 
 
 @app.command()
 def play(context: typer.Context):
-    game = Game()
+    """
+    Play a game of SPATLE.
+    """
+    game = Game(wordlist=app_state['words'])
     while game.guesses_remaining:
         if game.guess(typer.prompt(f"\n{game}\nEnter your five-letter guess (CTRL+C to quit)")):
             print(f"Correct! The solution was: {game.solution}")
