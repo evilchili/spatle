@@ -1,4 +1,4 @@
-# SPATLE: Speech PATHology wordLE!
+# SPATLE: Speech PAThology wordLE!
 
 This is a simple Wordle clone that can be played at the command-line. 
 
