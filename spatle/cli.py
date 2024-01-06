@@ -5,6 +5,7 @@ import typer
 from rich.logging import RichHandler
 
 from spatle.server import WebServer
+from spatle.game import Game
 
 app = typer.Typer()
 
@@ -18,6 +19,21 @@ def main(context: typer.Context):
         handlers=[RichHandler(rich_tracebacks=True, tracebacks_suppress=[typer])],
     )
     logging.getLogger("asyncio").setLevel(logging.ERROR)
+    print("SPATLE: Speech PAthology wordLE!")
+    if not context.invoked_subcommand:
+        return play(context)
+
+
+@app.command()
+def play(context: typer.Context):
+    game = Game()
+    print("")
+    while game.guesses_remaining:
+        solved = game.guess(typer.prompt(f"{game}\nEnter your guess: "))
+        if solved:
+            print(f"Correct! The solution was: {game.solution}")
+            return
+    print(f"You are out of guesses! The solution was: {game.solution}")
 
 
 @app.command()
@@ -36,7 +52,7 @@ def server(
     """
     Start the Spatle webserver.
     """
-    WebServer.start(host=host, port=port, debug=debug)
+    WebServer(host=host, port=port, debug=debug).start()
 
 
 if __name__ == "__main__":
